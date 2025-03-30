@@ -1,0 +1,978 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  width: 100%;
+  background-color: white;
+  padding: 10px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.middle-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.system-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-right: 30px;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top:80px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.upload-area {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.upload-area:hover, .upload-area.dragover {
+  border-color: #4CAF50;
+  background-color: #f9f9f9;
+}
+
+.rules-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.rule-item:hover {
+  background-color: #e8e8e8;
+}
+
+.rule-item input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+#keywordsInput {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+#keywordsInput textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* 修改操作按钮区域样式 */
+#actionButtons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: flex-start;
+}
+
+.action-button {
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 8px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button:hover {
+  background-color: #45a049;
+}
+
+#violationDetails {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#violationDetailsContent {
+  max-height: 500px;
+  overflow: auto;
+  padding: 15px;
+}
+
+/* 表格样式优化 */
+#violationDetailsContent table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+#violationDetailsContent th,
+#violationDetailsContent td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+#violationDetailsContent th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* 表格行样式 */
+#violationDetailsContent tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#violationDetailsContent tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* 滚动条样式美化 */
+#violationDetailsContent::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+#violationDetailsContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+#violationDetailsContent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+#violationDetailsContent::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .system-title {
+    font-size: 24px;
+  }
+
+  .rule-item {
+    padding: 8px;
+  }
+
+  .right-section {
+    padding-right: 15px;
+    gap: 10px;
+  }
+  
+  .header-button span {
+    display: none; /* 在小屏幕上只显示图标 */
+  }
+  
+  .user-info {
+    display: none; /* 在小屏幕上只显示头像 */
+  }
+}
+
+/* 头部按钮样式 */
+.header-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.header-button:hover {
+  background-color: #e8e8e8;
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* 用户部分样式 */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-left: 1px solid #eee;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #666;
+}
+
+/* 可选：添加按钮激活状态 */
+.header-button:active {
+  background-color: #ddd;
+  transform: scale(0.98);
+}
+
+/* 可选：添加用户部分悬停效果 */
+.user-section:hover {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+/* 检查记录页面样式 */
+.records-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.records-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.delete-button {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #ff7875;
+}
+
+.record-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.record-checkbox {
+  margin-right: 15px;
+}
+
+.record-summary {
+  flex: 1;
+  cursor: pointer;
+}
+
+.record-arrow {
+  font-size: 24px;
+  color: #999;
+}
+
+/* 违规数据表格样式 */
+.violations-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.violations-table th, 
+.violations-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.violations-table th {
+  background-color: #f2f2f2;
+}
+
+.violations-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .system-title {
+    font-size: 24px;
+  }
+
+  .rule-item {
+    padding: 8px;
+  }
+
+  .right-section {
+    padding-right: 15px;
+    gap: 10px;
+  }
+  
+  .header-button span {
+    display: none; /* 在小屏幕上只显示图标 */
+  }
+  
+  .user-info {
+    display: none; /* 在小屏幕上只显示头像 */
+  }
+}
+
+/* 头部按钮样式 */
+.header-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.header-button:hover {
+  background-color: #e8e8e8;
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* 用户部分样式 */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-left: 1px solid #eee;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #666;
+}
+
+/* 可选：添加按钮激活状态 */
+.header-button:active {
+  background-color: #ddd;
+  transform: scale(0.98);
+}
+
+/* 可选：添加用户部分悬停效果 */
+.user-section:hover {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+/* 检查记录页面样式 */
+.records-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.back-button {
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #e8e8e8;
+}
+
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.record-item:hover {
+  background-color: #f0f0f0;
+}
+
+.record-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.record-time {
+  font-weight: bold;
+  color: #333;
+}
+
+.record-file {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.record-stats {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.record-arrow {
+  font-size: 24px;
+  color: #999;
+}
+
+.record-detail-info {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.violations-table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.violations-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.violations-table th,
+.violations-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.violations-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.violations-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.violations-table tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* 返回主页按钮样式 */
+.home-button {
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.home-button:hover {
+  background-color: #40a9ff;
+}
+
+/* 记录操作区域样式 */
+.records-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.analysis-section {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.analysis-section h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.analysis-table th, .analysis-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.analysis-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.analysis-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.analysis-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* 添加新的模块化样式 */
+
+/* 部分样式 */
+.section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.5em;
+}
+
+/* 文件选择 */
+.file-input-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-input-label {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.file-input-label:hover {
+  background-color: #45a049;
+}
+
+.file-name-display {
+  margin-left: 15px;
+  color: #666;
+}
+
+/* 选择器容器 */
+.select-container {
+  display: flex;
+  align-items: center;
+}
+
+.select-container select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-right: 15px;
+}
+
+.select-container button {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.select-container button:hover {
+  background-color: #45a049;
+}
+
+/* 规则组 */
+.rule-group {
+  margin-bottom: 25px;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.rule-group h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #444;
+  font-size: 1.2em;
+}
+
+.rule-item {
+  margin-bottom: 10px;
+}
+
+.rule-item label {
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+/* 处理按钮 */
+.process-button {
+  display: block;
+  padding: 12px 25px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.process-button:hover {
+  background-color: #0b7dda;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.action-buttons button {
+  padding: 10px 15px;
+  background-color: #607D8B;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-buttons button:hover {
+  background-color: #546E7A;
+}
+
+/* 加载指示器 */
+.loading-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+.loading-text {
+  color: white;
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 结果区域 */
+.summary-area {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border-left: 5px solid #28a745;
+}
+
+.status-area {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.details-area {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+}
+
+/* 视图选择器 */
+.view-selector {
+  margin-bottom: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.view-btn {
+  padding: 8px 15px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.view-btn.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #2980b9;
+}
+
+/* 表格样式 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+}
+
+table, th, td {
+  border: 1px solid #dee2e6;
+}
+
+th {
+  background-color: #f8f9fa;
+  padding: 8px;
+  text-align: left;
+}
+
+td {
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* 分析部分 */
+.analysis-section {
+  margin-bottom: 30px;
+}
+
+/* 添加处理状态样式 */
+#processingStatus {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* 添加表单控件样式 */
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+/* 规则容器样式 */
+#dateBasedRules, #nonDateBasedRules {
+  margin-bottom: 20px;
+}
+
+.rule-item {
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  transition: background-color 0.2s;
+}
+
+.rule-item:hover {
+  background-color: #e8e8e8;
+}
+
+/* 确保表格标题文字水平显示 */
+#violationDetailsContent th,
+#violationDetailsContent td,
+.violations-table th,
+.violations-table td,
+.analysis-table th,
+.analysis-table td {
+  writing-mode: horizontal-tb !important; /* 强制水平文本 */
+  text-orientation: mixed !important; /* 正常文本方向 */
+  transform: none !important; /* 取消任何旋转变换 */
+  white-space: normal; /* 允许文本换行 */
+  vertical-align: middle; /* 垂直居中对齐 */
+  text-align: left; /* 文本左对齐 */
+  padding: 8px 12px !important; /* 确保足够的内边距 */
+  min-width: 100px; /* 设置最小列宽 */
+}
+
+/* 修改表头样式，确保水平方向 */
+#violationDetailsContent th,
+.violations-table th,
+.analysis-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* 调整表格布局 */
+#violationDetailsContent table,
+.violations-table,
+.analysis-table {
+  width: 100%; /* 表格宽度 */
+  table-layout: auto; /* 根据内容调整列宽 */
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+/* 增加表格自适应水平滚动 */
+#violationDetailsContent,
+.violations-table-container {
+  max-width: 100%;
+  overflow-x: auto; /* 允许水平滚动 */
+  padding-bottom: 5px; /* 防止滚动条贴边 */
+}
+
+.upload-button {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.drop-area {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px;
+  cursor: pointer;
+} 

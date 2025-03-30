@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>医保自查系统</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- 引入SheetJS库 -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <!-- 引入日期处理库 -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/dayjs.min.js"></script>
+    <!-- 引入自定义脚本 -->
+    <script type="module" src="script.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="middle-section">
+        <p class="system-title">
+          医保检查系统
+        </p>
+      </div>
+      <div class="right-section">
+        <button class="header-button" id="checkRecordsButton">
+          <img src="icons/list.jpg" alt="检查" class="button-icon">
+          <span>检查记录</span>
+        </button>
+        <button class="header-button" id="downloadRecordsButton">
+          <img src="icons/download.jpg" alt="下载" class="button-icon">
+          <span>下载记录</span>
+        </button>
+        <div class="user-section">
+          <img src="icons/account.jpg" alt="用户头像" class="user-avatar">
+          <div class="user-info">
+            <span class="user-name">姓名</span>
+            <span class="user-role">第一医院</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="checkRecordsContainer" class="container" style="display: none;">
+      <!-- 检查记录列表将在这里显示 -->
+    </div>
+
+    <div id="recordDetailContainer" class="container" style="display: none;">
+      <!-- 记录详情将在这里显示 -->
+    </div>
+
+    <div class="container" id="mainContent">
+      <div id="uploadSection">
+        <input type="file" id="fileInput" style="display: none;" />
+        <button id="uploadButton" class="upload-button">上传文件</button>
+        <div id="dropArea" class="drop-area">
+          拖放文件到这里
+        </div>
+      </div>
+
+      <div id="sheetSelector" class="section" style="display: none;">
+        <h3>表格选择</h3>
+        <div class="select-container">
+          <select id="sheetList" class="form-control"></select>
+          <button id="loadSheetButton" class="action-button">确定</button>
+        </div>
+      </div>
+
+      <div id="rulesSection" class="section" style="display: none;">
+        <h3>规则选择</h3>
+        
+        <!-- 基于日期的规则 -->
+        <div id="dateBasedRules" style="display: none;">
+          <div class="rule-item">
+            <input type="checkbox" id="rule1" name="rule" value="1">
+            <label for="rule1">规则1：每天治疗次数限制</label>
+            <div id="rule1Details" style="margin-left: 25px; display: none;">
+              <label for="rule1MaxPerDay">每天最多次数：</label>
+              <input type="number" id="rule1MaxPerDay" min="1" max="10" value="2">
+            </div>
+          </div>
+          <div class="rule-item">
+            <input type="checkbox" id="rule2" name="rule" value="2">
+            <label for="rule2">规则2：适应症错误</label>
+            <div id="keywordsInput" style="margin-left: 25px; display: none;">
+              <p>请输入关键词列表，用逗号分隔：</p>
+              <textarea id="keywords" rows="3" class="form-control" placeholder="例如：哮喘,糖尿病,高血压"></textarea>
+            </div>
+          </div>
+          <div class="rule-item">
+            <input type="checkbox" id="rule3" name="rule" value="3">
+            <label for="rule3">规则3：病程超过1年</label>
+            <div id="rehabAssessment" style="margin-left: 25px;">
+              <p>是否有康复评定？</p>
+              <input type="radio" id="rehabYes" name="rehab" value="yes">
+              <label for="rehabYes">是</label>
+              <input type="radio" id="rehabNo" name="rehab" value="no" checked>
+              <label for="rehabNo">否</label>
+              <div id="rehabFileUpload" style="display: none; margin-top: 10px;">
+                <input type="file" id="rehabFileInput" accept=".xlsx, .xls">
+                <label for="rehabFileInput">选择康复评定Excel文件</label>
+              </div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <input type="checkbox" id="rule5" name="rule" value="5">
+            <label for="rule5">规则5：病程内总次数超过4</label>
+          </div>
+          <div class="rule-item">
+            <input type="checkbox" id="rule6" name="rule" value="6">
+            <label for="rule6">规则6：住院次数限制</label>
+          </div>
+        </div>
+        
+        <!-- 非日期规则 -->
+        <div id="nonDateBasedRules" style="display: none;">
+          <div class="rule-item">
+            <input type="checkbox" id="rule2_nd" name="rule" value="2">
+            <label for="rule2_nd">规则2：适应症错误</label>
+            <div id="keywordsInput_nd" style="margin-left: 25px; display: none;">
+              <p>请输入关键词列表，用逗号分隔：</p>
+              <textarea id="keywords_nd" rows="3" class="form-control" placeholder="例如：哮喘,糖尿病,高血压"></textarea>
+            </div>
+          </div>
+          <div class="rule-item">
+            <input type="checkbox" id="rule4" name="rule" value="4">
+            <label for="rule4">规则4：单天次数大于5</label>
+          </div>
+        </div>
+        
+        <!-- 通用过滤器 -->
+        <div id="commonFilters" style="display: none; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+          <h4>通用筛选</h4>
+          
+          <div class="rule-item">
+            <input type="checkbox" id="ageFilter" name="filter" value="age">
+            <label for="ageFilter">年龄筛选</label>
+            <div id="ageInputArea" style="margin-left: 25px; display: none;">
+              <label for="filterMaxAge">最大年龄：</label>
+              <input type="number" id="filterMaxAge" min="1" max="120">
+            </div>
+          </div>
+          
+          <div class="rule-item">
+            <input type="checkbox" id="commonRule7" name="rule" value="7">
+            <label for="commonRule7">规则7：项目重复</label>
+            <div id="commonCompareFileSection" style="margin-left: 25px; display: none;">
+              <input type="file" id="commonCompareFileInput" accept=".xlsx, .xls">
+              <label for="commonCompareFileInput">选择对比Excel文件</label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="action-buttons" style="margin-top: 20px;">
+          <button id="processButton" class="action-button">开始筛查</button>
+          <button id="continueButton" class="action-button" style="display: none;">继续筛查</button>
+        </div>
+      </div>
+
+      <!-- 结果区域 -->
+      <div id="resultsSection" class="section" style="display: none;">
+        <h3>筛查结果</h3>
+        <div id="processingStatus"></div>
+        <div id="violationSummary" class="summary-area"></div>
+        
+        <!-- 结果操作按钮 -->
+        <div class="action-buttons">
+          <button id="showDetailsButton" class="action-button" style="display: none;">查看详情</button>
+          <button id="analyzeButton" class="action-button" style="display: none;">数据分析</button>
+          <button id="downloadButton" class="action-button" style="display: none;">下载结果</button>
+          <button id="continueButton2" class="action-button" style="display: none;">继续筛查</button>
+        </div>
+        
+        <!-- 违规详情区域 -->
+        <div id="violationDetails" style="display: none;">
+          <div id="violationDetailsContent"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
